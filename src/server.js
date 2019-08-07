@@ -1,15 +1,14 @@
 const express = require('express');
-const router = express.Router();
-
-const app = new express();
+const app = express();
+const App = require('./app');
 const port = 3333;
 
 
+/** start node server */
 
-app.listen(port ,(err)=>{
+app.listen(port,App,(err)=>{
     if(err) return console.error(err);
     return console.info(`Server running on port ${port}`);
 })
 
 
-module.exports = router;
