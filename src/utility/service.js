@@ -1,17 +1,42 @@
-import { promises } from "dns";
+const getDBConnection = require("../Common_Constant");
 
-function executeQuery(con , sqlQuery){
-    return(new promises(function(resolve,reject) {
-        con.query(sqlQuery,args,(err,result)=>{
-            if(err){
-                reject({status:"404"});
+
+const con = getDBConnection.mysqlConnection;
+
+
+function executeQuery(sqlQuery) {
+    return (new promises(function (resolve, reject) {
+        if (isEmpty(con) || isEmpty(sqlQuery)) {
+            reject({ status: "400", message: "Unable to process Further. Due to insufficient params" });
+        }
+        con.query(sqlQuery, args, (err, result) => {
+            if (err) {
+                reject({ status: "404", message: "Sorry Unable to Found might be problem with Query" });
             }
-            resolve(result)
+            resolve({ status: "200", data: result });
         })
     }));
 }
 
+function isEmpty(value) {
+    if (typeof value == 'undefined' || typeof value == null) {
+        return true;
+    }
+    else if (typeof value == Object) {
+        if (Array.isArray(value)) {
+            return value.length > 0 ? false : true;
+        } else {
+            return Object.keys(value).length > 0 ? false : true;
+        }
+    }
+    else if (typeof value == String) {
+        return value.length > 0 ? false : true;
+    }
+    return false;
+}
 
-module.exports ={
-    executeQuery
+
+module.exports = {
+    executeQuery,
+    isEmpty
 }

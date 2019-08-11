@@ -1,24 +1,38 @@
 const express = require('express');
+const mysqlConnection  =  require('./databases/mysqlConnection');
 const app = express();
-const Mysql =  require('mysql');
+const bodyParser = require('body-parser');
+const {registerNewUser} = require('../src/utility/auth');
 
-/** required the user define file */
-const executeQuery = require('./utility/service');
+app.use(bodyParser.urlencoded({ extended: false })) 
 
+// parse application/json
+app.use(bodyParser.json())
 
+app.use(express.json());
 
-const somepoint  = require('./Api/routes');
+/**
+ * User Defined Middleware 
+ * 
+ * checking user is logged in or not
+ * 
+ */
 
-/** Creating the Mysql connection */
-const conn = Mysql.createConnection({
-    host: "localhost",
-    user: "",
-    password:"",
-    database: "bookStoreDB"
+app.post("/auth-checking",(req,res)=>{
+    let emailId = req.body.email_Id;
+    let password = req.body.password;
+    registerNewUser(emailId , password)
+    .then(response =>response.json())
+    .then(response=>{
+        if(response.status == 200){
+            console.log(response.message);
+        }
+    })
+    .catch(err=>{
+        console.log(err);
+    })  
 })
 
-
-
-app.use('/somepoint', somepoint);
-
-module.exports = app;
+module.exports = {app,
+mysqlConnection
+};
