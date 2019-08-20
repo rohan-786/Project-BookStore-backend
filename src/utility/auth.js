@@ -2,10 +2,12 @@ const express = require('express');
 const {executeQuery} = require('./service');
 const isEmpty = require('./service');
 const { getTableNames} = require("../Common_Constant") ;
+const Promise = require('es6-promise').Promise;
 
 function isUserPresent(emailId) {
     return (new Promise(function (resolve, reject) {
-        const query = `SELECT emailId from userLoginDB where emailId = ${emailId}`;
+        const query = `select * from userLoginDB where Email_Id = '${emailId}'`;
+        console.log(query);
         executeQuery(query)
             .then(response => response.json())
             .then(response => {
@@ -27,7 +29,7 @@ function registerNewUser(emailId, password) {
                 response.isUserExist ? reject({ status: 422, message: "Unable to create account .Account is already exist" }) :
                     resolve(createUserAccount(emailId, password))
             })
-            .catch(err => reject({ status: 500, message: "Internal server Error!" }));
+            .catch(err => reject({ status: 500, message: `Internal server Error! ${err}` }));
     }))
 }
 

@@ -1,15 +1,18 @@
 const getDBConnection = require("../Common_Constant");
+const promises = require('es6-promise').Promise;
 
 
 const con = getDBConnection.mysqlConnection;
 
 
 function executeQuery(sqlQuery) {
-    return (new promises(function (resolve, reject) {
+    return (new Promise(function (resolve, reject) {
         if (isEmpty(con) || isEmpty(sqlQuery)) {
             reject({ status: "400", message: "Unable to process Further. Due to insufficient params" });
         }
         con.query(sqlQuery, args, (err, result) => {
+            console.log(err);
+            console.log(result);
             if (err) {
                 reject({ status: "404", message: "Sorry Unable to Found might be problem with Query" });
             }

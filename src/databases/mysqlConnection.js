@@ -4,11 +4,13 @@ const Mysql =  require('mysql');
 /** Creating the Mysql connection */
 const mysqlConnection = Mysql.createConnection({
     host: "localhost",
-    user: "",
-    password:"",
-    database: "bookStoreDB"
+    user: "root",
+    password:" ",
+    database: "BookOverFlow"
 })
-
-console.log("Mysql Connection Established");
+mysqlConnection.connect((err)=>{
+    if(err) throw err;
+    console.log("Mysql Connection Established");  
+})
 
 module.exports = {mysqlConnection};
