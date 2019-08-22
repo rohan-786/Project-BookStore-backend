@@ -1,45 +1,21 @@
-const getDBConnection = require("../Common_Constant");
-const promises = require('es6-promise').Promise;
-
-
-const con = getDBConnection.mysqlConnection;
-
+const { mysqlConnection } = require('../databases/mysqlConnection');
+const { isEmpty, createJsonResponse } = require('./CommonFunction');
 
 function executeQuery(sqlQuery) {
     return (new Promise(function (resolve, reject) {
-        if (isEmpty(con) || isEmpty(sqlQuery)) {
-            reject({ status: "400", message: "Unable to process Further. Due to insufficient params" });
+        if (isEmpty(sqlQuery) || isEmpty(mysqlConnection)) {
+            reject(createJsonResponse(400, 'Empty Query Request'))
         }
-        con.query(sqlQuery, args, (err, result) => {
-            console.log(err);
-            console.log(result);
+        mysqlConnection.query(sqlQuery, (err, result) => {
             if (err) {
-                reject({ status: "404", message: "Sorry Unable to Found might be problem with Query" });
+                reject(createJsonResponse(400, "Invalid Query"));
             }
-            resolve({ status: "200", data: result });
+            !isEmpty(result) ? resolve(createJsonResponse(200, result)) : resolve(createJsonResponse(404, "Empty set return"));
         })
-    }));
+    }))
 }
-
-function isEmpty(value) {
-    if (typeof value == 'undefined' || typeof value == null) {
-        return true;
-    }
-    else if (typeof value == Object) {
-        if (Array.isArray(value)) {
-            return value.length > 0 ? false : true;
-        } else {
-            return Object.keys(value).length > 0 ? false : true;
-        }
-    }
-    else if (typeof value == String) {
-        return value.length > 0 ? false : true;
-    }
-    return false;
-}
-
 
 module.exports = {
-    executeQuery,
-    isEmpty
+    executeQuery
 }
+

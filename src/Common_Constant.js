@@ -1,9 +1,9 @@
-const conn = require('./app');
+const {mysqlConnection}  = require('./app');
 const getTableNames = {
     userLoginTable : "userLoginDB"
 }
 const getDBConnection ={
-    mysqlConnection:conn
+    mysqlConnection:mysqlConnection
 }
 
 

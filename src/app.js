@@ -1,9 +1,8 @@
 const express = require('express');
-const mysqlConnection  =  require('./databases/mysqlConnection');
 const app = express();
 const bodyParser = require('body-parser');
-const {registerNewUser} = require('../src/utility/auth');
-
+const {registerNewUser , authenticateUser} = require('../src/utility/auth');
+const {checkAuthentication} = require('./utility/middleWare');
 app.use(bodyParser.urlencoded({ extended: false })) 
 
 // parse application/json
@@ -18,21 +17,22 @@ app.use(express.json());
  * 
  */
 
+app.use((req,res)=>{
+   let emailId = req.body.email_Id;
+    let password = req.body.password;
+    checkAuthentication(emailId,password); 
+})
 app.post("/auth-checking",(req,res)=>{
     let emailId = req.body.email_Id;
     let password = req.body.password;
     registerNewUser(emailId , password)
-    .then(response =>response.json())
     .then(response=>{
-        if(response.status == 200){
-            console.log(response.message);
-        }
+        console.log(response);
     })
     .catch(err=>{
         console.log(err);
     })  
 })
 
-module.exports = {app,
-mysqlConnection
+module.exports = {app
 };
