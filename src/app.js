@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const Home = require('./Api/Routes/Home');
 const {registerNewUser , authenticateUser} = require('../src/utility/auth');
 app.use(bodyParser.urlencoded({ extended: false })) 
 
@@ -16,9 +17,10 @@ app.use(express.json());
  * 
  */
 
-app.use((req,res,next)=>{
+app.use('/auth-checking',(req,res,next)=>{
    let emailId = req.body.email_Id;
     let password = req.body.password;
+   
      authenticateUser(emailId , password)
      .then(response=>{
          response.value == true ? res.status(200).json({message:"user is present"}) : next();
@@ -27,18 +29,20 @@ app.use((req,res,next)=>{
          console.error("!Invalid Query ",err);
      })
 })
-app.use((req,res,next)=>{
+app.use('/new-user',(req,res,next)=>{
     let emailId = req.body.email_Id;
     let password = req.body.password;
+    console.log("new user",emailId," ",password);
     registerNewUser(emailId , password)
     .then(response=>{
+        console.log(response);
         response.status == 200 ? res.status(200).json({message: 'user created successfully'}) : next(); 
     })
     .catch(err=>{
         console.log(err);
     })  
 })
-
+//app.use('/home',Home);
 app.use((error, req,res,next)=>{
     res.status(error.status || 500);
     res.json({
