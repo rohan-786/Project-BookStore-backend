@@ -3,11 +3,16 @@
   "version": "1.0.0",
   "description": "This project will provide the webservice and api point for BookStore application.",
   "main": "index.js",
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "babel-plugin-dynamic-import-node": "^2.2.0",
+    "express": "^4.16.4",
+    "mysql": "^2.17.1",
+    "nodemon": "^1.18.2",
+    "cors" : "^2.8.5"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"nodemon src/server.js"	
+    "start": "nodemon src/server.js"
   },
   "repository": {
     "type": "git",
@@ -18,18 +23,5 @@
   "bugs": {
     "url": "https://github.com/rohan-786/Project-BookStore-backend/issues"
   },
-  "homepage": "https://github.com/rohan-786/Project-BookStore-backend#readme",
-  "dependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/register": "^7.5.5",
-    "express": "^4.16.4",
-    "nodemon": "^1.18.2"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/register": "^7.5.5"
-  }
-
+  "homepage": "https://github.com/rohan-786/Project-BookStore-backend#readme"
 }
