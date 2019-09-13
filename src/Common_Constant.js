@@ -1,10 +1,14 @@
 const {mysqlConnection}  = require('./app');
+
 const getTableNames = {
-    userLoginTable : "userLoginDB"
+    userLoginTable : "userLoginDB",
+    bookTable: "bookDB"
 }
 const getDBConnection ={
     mysqlConnection:mysqlConnection
 }
+
+
 
 
 module.exports={

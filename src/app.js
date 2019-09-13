@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 var cors = require('cors')
 const bodyParser = require('body-parser');
-const Home = require('./Api/Routes/Home');
+const searchRoute = require('./Api/Routes/SearchModule/Search'); 
 
 const {registerNewUser , authenticateUser} = require('../src/utility/auth');
 app.use(bodyParser.urlencoded({ extended: false })) 
@@ -44,7 +44,8 @@ app.use('/new-user',(req,res,next)=>{
         console.log(err);
     })  
 })
-//app.use('/home',Home);
+
+app.use('/Book',searchRoute);
 app.use((error, req,res,next)=>{
     res.status(error.status || 500);
     res.json({

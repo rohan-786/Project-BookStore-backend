@@ -1,6 +1,23 @@
+/**
+ * 
+ * author : Rohan choudhary
+ */
+
 const { mysqlConnection } = require('../databases/mysqlConnection');
 const { isEmpty, createJsonResponse } = require('./CommonFunction');
 
+
+/**
+ * 
+ * @param {*} sqlQuery 
+ * 
+ * executeQuery function takes query and do mysql operation accordingly.
+ * 
+ * http code : 400 , 200 , 404
+ * 
+ * return : return data if query is valid with promise.
+ * 
+ */
 function executeQuery(sqlQuery) {
     return (new Promise(function (resolve, reject) {
         if (isEmpty(sqlQuery) || isEmpty(mysqlConnection)) {
