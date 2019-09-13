@@ -1,13 +1,15 @@
 const express = require('express');
 const app = express();
+var cors = require('cors')
 const bodyParser = require('body-parser');
 const Home = require('./Api/Routes/Home');
+
 const {registerNewUser , authenticateUser} = require('../src/utility/auth');
 app.use(bodyParser.urlencoded({ extended: false })) 
 
 // parse application/json
 app.use(bodyParser.json())
-
+app.use(cors());
 app.use(express.json());
 
 /**
@@ -18,9 +20,9 @@ app.use(express.json());
  */
 
 app.use('/auth-checking',(req,res,next)=>{
-   let emailId = req.body.email_Id;
-    let password = req.body.password;
-   
+   let emailId = req.headers.emailid;
+    let password = req.headers.password;
+    console.log(emailId," ",password);
      authenticateUser(emailId , password)
      .then(response=>{
          response.value == true ? res.status(200).json({message:"user is present"}) : next();
@@ -30,8 +32,8 @@ app.use('/auth-checking',(req,res,next)=>{
      })
 })
 app.use('/new-user',(req,res,next)=>{
-    let emailId = req.body.email_Id;
-    let password = req.body.password;
+    let emailId = req.headers.emailid;
+    let password = req.headers.password;
     console.log("new user",emailId," ",password);
     registerNewUser(emailId , password)
     .then(response=>{
