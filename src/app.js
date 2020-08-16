@@ -1,60 +1,44 @@
 const express = require('express');
 const app = express();
 var cors = require('cors')
-const bodyParser = require('body-parser');
-const Home = require('./Api/Routes/Home');
-
-const {registerNewUser , authenticateUser} = require('../src/utility/auth');
-app.use(bodyParser.urlencoded({ extended: false })) 
-
-// parse application/json
-app.use(bodyParser.json())
-app.use(cors());
 app.use(express.json());
 
-/**
- * User Defined Middleware 
- * 
- * checking user is logged in or not
- * 
- */
+app.use(cors());
 
-app.use('/auth-checking',(req,res,next)=>{
-   let emailId = req.headers.emailid;
-    let password = req.headers.password;
-    console.log(emailId," ",password);
-     authenticateUser(emailId , password)
-     .then(response=>{
-         response.value == true ? res.status(200).json({message:"user is present"}) : next();
-     })
-     .catch(err=>{
-         console.error("!Invalid Query ",err);
-     })
+let jsonData = require('../TestJSON.json');
+const { getUserInfo, getUserActivityData } = require('./utility/commonUtils');
+
+app.use('/get-userinfo', (req, res) => {
+    try {
+        const userInfo = getUserInfo(jsonData);
+        res.status(200).json(userInfo);
+    } catch (error) {
+        console.error("[ERROR] issue generate while processing on data", err);
+    }
 })
-app.use('/new-user',(req,res,next)=>{
-    let emailId = req.headers.emailid;
-    let password = req.headers.password;
-    console.log("new user",emailId," ",password);
-    registerNewUser(emailId , password)
-    .then(response=>{
-        console.log(response);
-        response.status == 200 ? res.status(200).json({message: 'user created successfully'}) : next(); 
-    })
-    .catch(err=>{
-        console.log(err);
-    })  
+
+app.use('/get-user-activity', (req, res) => {
+    try {
+        let searchId = req.headers.id;
+        if (!searchId) throw new Error("Search Id Missing");
+        const userActivityInfo = getUserActivityData(searchId, jsonData);
+        res.status(200).json(userActivityInfo);
+    } catch (e) {
+        console.error("[ERROR]", err);
+    }
 })
-//app.use('/home',Home);
-app.use((error, req,res,next)=>{
+
+app.use((error, req, res, next) => {
     res.status(error.status || 500);
     res.json({
-        error:{
-            message:error.message
+        error: {
+            message: error.message
         }
     })
 })
 
 
 
-module.exports = {app
+module.exports = {
+    app
 };
