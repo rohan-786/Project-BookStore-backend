@@ -15,24 +15,5 @@ function isEmpty(value) {
     return false;
 }
 
-function createJsonResponse(statusCode , value){
-        let result={};
-        if(isEmpty(statusCode)){
-            console.error("Status code is not present");
-            return; 
-        }
-        if(isEmpty(value)){
-            console.error("value or message field not present");
-            return;
-        }
-
-        result['status'] = statusCode;
-        result['value'] = value;
-
-        return result;
-}
-
 module.exports={
-    isEmpty,
-    createJsonResponse
-}
+    isEmpty}
